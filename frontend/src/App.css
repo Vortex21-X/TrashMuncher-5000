@@ -1,0 +1,218 @@
+/* Custom styles for the trash finder app */
+
+.App {
+  text-align: center;
+}
+
+/* Video container styles */
+.video-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Ensure video maintains aspect ratio */
+video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Overlay canvas for detection boxes */
+#overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Detection box animations */
+.detection-box {
+  animation: pulseBox 2s infinite;
+}
+
+@keyframes pulseBox {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Status indicators */
+.status-indicator {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s ease;
+}
+
+/* Loading animation */
+.loading-spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #ef4444;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar for detection list */
+.detection-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.detection-list::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 3px;
+}
+
+.detection-list::-webkit-scrollbar-thumb {
+  background: #6B7280;
+  border-radius: 3px;
+}
+
+.detection-list::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Responsive video sizing */
+@media (max-width: 768px) {
+  .video-container {
+    width: 100%;
+  }
+  
+  video {
+    width: 100%;
+    height: auto;
+  }
+  
+  #overlay-canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Glow effect for active detection */
+.detection-active {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+  }
+}
+
+/* Button hover effects */
+.btn-primary {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Detection confidence bar */
+.confidence-bar {
+  height: 4px;
+  background: linear-gradient(to right, #ef4444, #f59e0b, #10b981);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+/* Floating action button */
+.fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+}
+
+/* Custom grid layout for mobile */
+@media (max-width: 1024px) {
+  .grid-lg-cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Performance indicator */
+.fps-indicator {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Detection label styling */
+.detection-label {
+  background: rgba(239, 68, 68, 0.9);
+  backdrop-filter: blur(4px);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Camera access permission styles */
+.camera-permission {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Error state styling */
+.error-state {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* Success state styling */
+.success-state {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
