@@ -65,18 +65,28 @@ async def load_trash_model():
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         logger.info(f"Using device: {device}")
         
-        # Try to load FathomNet trash detector first
         try:
-            # This will download the model from HuggingFace if not cached
-            model = YOLO('yolov8n.pt')  # Start with base model, will update to trash-specific
-            logger.info("Base YOLO model loaded successfully")
+            # Try to download a trash-specific model first
+            # This is a TACO dataset trained model available on Hugging Face
+            from huggingface_hub import hf_hub_download
             
-            # Load trash-specific model weights if available
-            # For now using base model, will enhance with specific trash detection
+            # Try to get a trash-specific YOLO model
+            try:
+                model_path = hf_hub_download(
+                    repo_id="keremberke/yolov8n-trash-detection",
+                    filename="yolov8n-trash-detection.pt"
+                )
+                model = YOLO(model_path)
+                logger.info("Trash-specific YOLO model loaded successfully from HuggingFace")
+            except Exception as e:
+                logger.info(f"Trash-specific model not available: {e}, using base model with custom classes")
+                # Fall back to base model
+                model = YOLO('yolov8n.pt')
+                logger.info("Base YOLO model loaded successfully")
             
         except Exception as e:
-            logger.error(f"Error loading specific trash model: {e}")
-            # Fallback to base YOLO model
+            logger.error(f"Error loading model: {e}")
+            # Final fallback to base YOLO model
             model = YOLO('yolov8n.pt')
             logger.info("Loaded fallback YOLO model")
             
