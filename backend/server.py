@@ -142,23 +142,61 @@ def detect_trash(frame):
                     confidence = box.conf[0].cpu().numpy()
                     class_id = int(box.cls[0].cpu().numpy())
                     
-                    # Get class name (for now using COCO classes, will update for trash-specific)
+                    # Get class name
                     class_name = model.names[class_id]
                     
-                    # Filter for objects that could be trash (bottles, cans, etc.)
-                    trash_classes = ['bottle', 'cup', 'fork', 'knife', 'spoon', 'bowl', 
-                                   'banana', 'apple', 'sandwich', 'orange', 'broccoli', 
-                                   'carrot', 'hot dog', 'pizza', 'donut', 'cake',
-                                   'cell phone', 'book', 'scissors', 'teddy bear']
+                    # Define potential trash classes
+                    # If using a trash-specific model, these will be trash categories
+                    # If using base COCO model, these are items that could be trash
+                    trash_classes = [
+                        'bottle', 'cup', 'fork', 'knife', 'spoon', 'bowl', 
+                        'banana', 'apple', 'sandwich', 'orange', 'broccoli', 
+                        'carrot', 'hot dog', 'pizza', 'donut', 'cake',
+                        'cell phone', 'book', 'scissors', 'teddy bear',
+                        'toothbrush', 'hair drier', 'backpack', 'handbag',
+                        'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
+                        'kite', 'baseball bat', 'baseball glove', 'skateboard',
+                        'surfboard', 'tennis racket', 'wine glass'
+                    ]
                     
-                    # For demo purposes, treat many objects as potential trash
-                    # In production, we'd use a trash-specific model
-                    if confidence > 0.3:  # Lower threshold for demo
+                    # Check if detected class could be trash
+                    is_potential_trash = (
+                        confidence > 0.25 and  # Lower threshold for demo
+                        (class_name.lower() in [tc.lower() for tc in trash_classes] or
+                         'trash' in class_name.lower() or
+                         'litter' in class_name.lower() or
+                         'waste' in class_name.lower() or
+                         'garbage' in class_name.lower() or
+                         'cigarette' in class_name.lower() or
+                         'can' in class_name.lower() or
+                         'bag' in class_name.lower())
+                    )
+                    
+                    if is_potential_trash:
+                        # Determine trash type based on detection
+                        if 'bottle' in class_name.lower():
+                            trash_type = "Plastic Bottle"
+                        elif 'cup' in class_name.lower():
+                            trash_type = "Disposable Cup"
+                        elif 'can' in class_name.lower():
+                            trash_type = "Aluminum Can"
+                        elif 'bag' in class_name.lower():
+                            trash_type = "Plastic Bag"
+                        elif 'cigarette' in class_name.lower():
+                            trash_type = "Cigarette Butt"
+                        elif 'trash' in class_name.lower() or 'garbage' in class_name.lower():
+                            trash_type = class_name.title()
+                        elif any(food in class_name.lower() for food in ['banana', 'apple', 'orange', 'sandwich', 'pizza']):
+                            trash_type = f"Food Waste: {class_name.title()}"
+                        else:
+                            trash_type = f"Potential Litter: {class_name.title()}"
+                        
                         detections.append({
                             'bbox': [float(x1), float(y1), float(x2), float(y2)],
                             'confidence': float(confidence),
-                            'class_name': f"Potential Trash: {class_name}",
-                            'class_id': class_id
+                            'class_name': trash_type,
+                            'class_id': class_id,
+                            'original_class': class_name
                         })
         
         return detections
