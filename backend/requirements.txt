@@ -1,0 +1,16 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+pillow==10.1.0
+opencv-python==4.8.1.78
+ultralytics==8.0.220
+torch==2.1.1
+torchvision==0.16.1
+numpy==1.24.4
+websockets==12.0
+python-socketio==5.10.0
+python-cors==1.7.0
+motor==3.3.2
+pymongo==4.6.0
+python-dotenv==1.0.0
+huggingface-hub==0.19.4
